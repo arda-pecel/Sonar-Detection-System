@@ -8,6 +8,9 @@
 ////////////////////////////////////////
 #include<Servo.h>
 Servo sg90;
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 const byte buton = 4;
 const byte buzzer = 7;
 const byte echo = 2;
@@ -28,6 +31,7 @@ int alarm_mesafesi = 0;
 int pos = 0;
 void setup()
 {
+  lcd.begin();
   sg90.attach(5);
   sg90.write(90);
   pinMode(buton , INPUT);
@@ -65,7 +69,9 @@ void setup()
       digitalWrite(led2 , 0);
       digitalWrite(led3 , 0);
       digitalWrite(led4 , 0);
-      digitalWrite(led5 , 0);
+      digitalWrite(led5 , 0);      
+      lcd.setCursor(0, 1);
+      lcd.print("Range= 10 cm   ");
     }
     else if (pot_deger == 2)
     {
@@ -75,6 +81,8 @@ void setup()
       digitalWrite(led3 , 0);
       digitalWrite(led4 , 0);
       digitalWrite(led5 , 0);
+      lcd.setCursor(0, 1);
+      lcd.print("Range= 20 cm   ");
     }
     else if (pot_deger == 3)
     {
@@ -84,6 +92,8 @@ void setup()
       digitalWrite(led3 , 1);
       digitalWrite(led4 , 0);
       digitalWrite(led5 , 0);
+      lcd.setCursor(0, 1);
+      lcd.print("Range= 30 cm   ");
     }
     else if (pot_deger == 4)
     {
@@ -93,6 +103,8 @@ void setup()
       digitalWrite(led3 , 1);
       digitalWrite(led4 , 1);
       digitalWrite(led5 , 0);
+      lcd.setCursor(0, 1);
+      lcd.print("Range= 40 cm   ");
     }
     else if (pot_deger == 5)
     {
@@ -102,6 +114,8 @@ void setup()
       digitalWrite(led3 , 1);
       digitalWrite(led4 , 1);
       digitalWrite(led5 , 1);
+      lcd.setCursor(0, 1);
+      lcd.print("Range= 50 cm   ");
     }
 
     if (digitalRead(buton) == 1)
@@ -111,7 +125,10 @@ void setup()
 
 void loop()
 {
-  
+  lcd.home();
+  lcd.print("Working         ");
+  lcd.setCursor(0, 1);
+  lcd.print("                ");    
   pot_deger1 = analogRead(pot_pini1);
   int yeni_deger = map(pot_deger1 , 0, 1023, 0, 180);
   sg90.write(yeni_deger);
@@ -124,6 +141,8 @@ void loop()
       digitalWrite(led3 , 1);
       digitalWrite(led4 , 1);
       digitalWrite(led5 , 1);
+      lcd.setCursor(0, 1);
+      lcd.print("Motion Detected ");
       digitalWrite(buzzer , 1);
     }
     if(digitalRead(buton)==1)
@@ -148,6 +167,8 @@ void loop()
       digitalWrite(led3 , 1);
       digitalWrite(led4 , 1);
       digitalWrite(led5 , 1);
+      lcd.setCursor(0, 1);
+      lcd.print("Motion Detected ");
       digitalWrite(buzzer , 1);
     }
     if(digitalRead(buton)==1)
