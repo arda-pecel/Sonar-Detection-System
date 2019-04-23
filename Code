@@ -126,6 +126,9 @@ void setup()
 
 void loop()
 {
+  if(digitalRead(buton1)==0)
+    {
+  
   lcd.home();
   lcd.print("Working         ");
   lcd.setCursor(0, 1);
@@ -134,6 +137,15 @@ void loop()
   int yeni_deger = map(pot_deger1 , 0, 1023, 0, 180);
   sg90.write(yeni_deger);
     delay(15);
+    }
+  else if (digitalRead(buton1)==1)
+    {
+    for (pos = 180; pos >= 0; pos--)
+  {
+    sg90.write(pos);
+    delay(15);
+  }
+    }
     mesafe = mesafe_olc();
     if (mesafe <= alarm_mesafesi)
     {
