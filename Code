@@ -140,13 +140,17 @@ void loop()
     }
   else if (digitalRead(buton1)==1)
     {
-    for (pos = 180; pos >= 0; pos--)
+  for (pos = 0; pos <= 180; pos++)
   {
     sg90.write(pos);
     delay(15);
-  }
-    }
     mesafe = mesafe_olc();
+    
+  if (mesafe<0)
+    mesafe==0;
+  if (mesafe>200)
+    mesafe==0;
+    
     if (mesafe <= alarm_mesafesi)
     {
       digitalWrite(led1 , 1);
@@ -155,8 +159,11 @@ void loop()
       digitalWrite(led4 , 1);
       digitalWrite(led5 , 1);
       lcd.setCursor(0, 1);
-      lcd.print("Motion Detected ");
-      delay(100);
+      lcd.print("Cor:");
+      lcd.print(pos);
+      lcd.print(" to ");
+      lcd.print(mesafe);
+      delay(500);
       digitalWrite(buzzer , 1);
     }
     if(digitalRead(buton)==1)
@@ -168,6 +175,39 @@ void loop()
       digitalWrite(led5 , 0);
       digitalWrite(buzzer , 0);
     }
+  }
+  for (pos = 180; pos >= 0; pos--)
+  {
+    sg90.write(pos);
+    delay(15);
+    mesafe = mesafe_olc();
+    if (mesafe <= alarm_mesafesi)
+    {
+      digitalWrite(led1 , 1);
+      digitalWrite(led2 , 1);
+      digitalWrite(led3 , 1);
+      digitalWrite(led4 , 1);
+      digitalWrite(led5 , 1);
+      lcd.setCursor(0, 1);
+      lcd.print("Cor:");
+      lcd.print(pos);
+      lcd.print(" to ");
+      lcd.print(mesafe);
+      delay(500);
+      digitalWrite(buzzer , 1);
+    }
+    if(digitalRead(buton)==1)
+    {
+      digitalWrite(led1 , 0);
+      digitalWrite(led2 , 0);
+      digitalWrite(led3 , 0);
+      digitalWrite(led4 , 0);
+      digitalWrite(led5 , 0);
+      digitalWrite(buzzer , 0);
+    }
+  }
+}
+    
   
   pot_deger1 = analogRead(pot_pini1);
   int yeni_deger1 = map(pot_deger1 , 0, 1023, 0, 180);
@@ -182,8 +222,11 @@ void loop()
       digitalWrite(led4 , 1);
       digitalWrite(led5 , 1);
       lcd.setCursor(0, 1);
-      lcd.print("Motion Detected ");
-      delay(100);
+      lcd.print("Cor:");
+      lcd.print(pot_deger1);
+      lcd.print(" to ");
+      lcd.print(mesafe);
+      delay(500);
       digitalWrite(buzzer , 1);
     }
     if(digitalRead(buton)==1)
