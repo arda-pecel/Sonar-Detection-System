@@ -3,7 +3,7 @@
    Author: Arda Peçel
    Project: Sonar Detection System
    Date: 19.04.2019
-   Version: v0.2
+   Version: v0.3
 */
 ////////////////////////////////////////
 #include<Servo.h>
@@ -13,7 +13,7 @@ Servo sg90;
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 const byte buton = 4;
 const byte buton1 = 6;
-const byte buzzer = 7;
+const byte buzzer = 12;
 const byte echo = 2;
 const byte trig = 3;
 const byte led1 = 8;
@@ -21,6 +21,7 @@ const byte led2 = 9;
 const byte led3 = 10;
 const byte led4 = 11;
 const byte led5 = 12;
+const byte pirPin = 7; 
 const byte pot_pini = A0;
 const byte pot_pini1 = A1;
 int pot_deger = 0;
@@ -30,6 +31,7 @@ int sure = 0;
 int mesafe = 0;
 int alarm_mesafesi = 0;
 int pos = 0;
+int hareket;
 void setup()
 {
   lcd.begin();
@@ -44,6 +46,7 @@ void setup()
   pinMode(led5 , OUTPUT);
   pinMode(echo , INPUT);
   pinMode(trig , OUTPUT);
+  pinMode(pirPin, INPUT);  
   Serial.begin(9600);
 
   pot_deger_ilk = analogRead(pot_pini);
@@ -126,6 +129,22 @@ void setup()
 
 void loop()
 {
+  
+  hareket = digitalRead(pirPin);
+  if(hareket == HIGH){
+    digitalWrite(led4 , 1);
+    digitalWrite(led5 , 1);
+    lcd.setCursor(0, 1);
+    lcd.print("Motion Detected ");
+    delay(200);
+    if(digitalRead(buton)==1)
+    {
+      digitalWrite(led4 , 0);
+      digitalWrite(led5 , 0);
+      digitalWrite(buzzer , 0);
+    }     
+  }
+  
   if(digitalRead(buton1)==0)
     {
   
@@ -159,7 +178,7 @@ void loop()
       digitalWrite(led4 , 1);
       digitalWrite(led5 , 1);
       lcd.setCursor(0, 1);
-      lcd.print("Cor:");
+      lcd.print("Coor:");
       lcd.print(pos);
       lcd.print(" to ");
       lcd.print(mesafe);
@@ -189,7 +208,7 @@ void loop()
       digitalWrite(led4 , 1);
       digitalWrite(led5 , 1);
       lcd.setCursor(0, 1);
-      lcd.print("Cor:");
+      lcd.print("Coor:");
       lcd.print(pos);
       lcd.print(" to ");
       lcd.print(mesafe);
@@ -222,7 +241,7 @@ void loop()
       digitalWrite(led4 , 1);
       digitalWrite(led5 , 1);
       lcd.setCursor(0, 1);
-      lcd.print("Cor:");
+      lcd.print("Coor:");
       lcd.print(pot_deger1);
       lcd.print(" to ");
       lcd.print(mesafe);
