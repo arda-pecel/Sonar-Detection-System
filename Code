@@ -2,8 +2,8 @@
 /*
    Author: Arda Peçel
    Project: Sonar Detection System
-   Date: 24.04.2019
-   Version: v0.3
+   Date: 19.04.2019
+   Version: v0.4
 */
 ////////////////////////////////////////
 #include<Servo.h>
@@ -28,10 +28,11 @@ int pot_deger = 0;
 int pot_deger1;
 int pot_deger_ilk = 0;
 int sure = 0;
-int mesafe = 0;
 int alarm_mesafesi = 0;
 int pos = 0;
 int hareket;
+int distance;
+int i;
 void setup()
 {
   lcd.begin();
@@ -159,31 +160,35 @@ void loop()
     }
   else if (digitalRead(buton1)==1)
     {
-  for (pos = 0; pos <= 180; pos++)
+  for (i = 0; i <= 180; i++)
   {
-    sg90.write(pos);
+    sg90.write(i);
     delay(15);
-    mesafe = mesafe_olc();
+    distance = calculateDistance();
     
-  if (mesafe<0)
-    mesafe==0;
-  if (mesafe>200)
-    mesafe==0;
+  if (distance<0)
+    distance==0;
+  if (distance>200)
+    distance==0;
     
-    if (mesafe <= alarm_mesafesi)
+    if (distance <= alarm_mesafesi)
     {
       digitalWrite(led1 , 1);
       digitalWrite(led2 , 1);
-      digitalWrite(led3 , 1);
-      digitalWrite(led4 , 1);
-      digitalWrite(led5 , 1);
+      digitalWrite(led3 , 0);
+      digitalWrite(led4 , 0);
+      digitalWrite(led5 , 0);
       lcd.setCursor(0, 1);
       lcd.print("Coor:");
-      lcd.print(pos);
+      lcd.print(i);
       lcd.print(" to ");
-      lcd.print(mesafe);
+      lcd.print(distance);
       delay(500);
       digitalWrite(buzzer , 1);
+      Serial.print(i); 
+      Serial.print(","); 
+      Serial.print(distance);
+      Serial.print("."); 
     }
     if(digitalRead(buton)==1)
     {
@@ -195,25 +200,29 @@ void loop()
       digitalWrite(buzzer , 0);
     }
   }
-  for (pos = 180; pos >= 0; pos--)
+  for (i = 180; i >= 0; i--)
   {
-    sg90.write(pos);
+    sg90.write(i);
     delay(15);
-    mesafe = mesafe_olc();
-    if (mesafe <= alarm_mesafesi)
+    distance = calculateDistance();
+    if (distance <= alarm_mesafesi)
     {
       digitalWrite(led1 , 1);
       digitalWrite(led2 , 1);
-      digitalWrite(led3 , 1);
-      digitalWrite(led4 , 1);
-      digitalWrite(led5 , 1);
+      digitalWrite(led3 , 0);
+      digitalWrite(led4 , 0);
+      digitalWrite(led5 , 0);
       lcd.setCursor(0, 1);
       lcd.print("Coor:");
-      lcd.print(pos);
+      lcd.print(i);
       lcd.print(" to ");
-      lcd.print(mesafe);
+      lcd.print(distance);
       delay(500);
       digitalWrite(buzzer , 1);
+      Serial.print(i); 
+      Serial.print(","); 
+      Serial.print(distance);
+      Serial.print("."); 
     }
     if(digitalRead(buton)==1)
     {
@@ -232,21 +241,25 @@ void loop()
   int yeni_deger1 = map(pot_deger1 , 0, 1023, 0, 180);
   sg90.write(yeni_deger1);
     delay(15);
-    mesafe = mesafe_olc();
-    if (mesafe <= alarm_mesafesi)
+    distance = calculateDistance();
+    if (distance <= alarm_mesafesi)
     {
       digitalWrite(led1 , 1);
       digitalWrite(led2 , 1);
-      digitalWrite(led3 , 1);
-      digitalWrite(led4 , 1);
-      digitalWrite(led5 , 1);
+      digitalWrite(led3 , 0);
+      digitalWrite(led4 , 0);
+      digitalWrite(led5 , 0);
       lcd.setCursor(0, 1);
       lcd.print("Coor:");
       lcd.print(pot_deger1);
       lcd.print(" to ");
-      lcd.print(mesafe);
+      lcd.print(distance);
       delay(500);
       digitalWrite(buzzer , 1);
+      Serial.print(i); 
+      Serial.print(","); 
+      Serial.print(distance);
+      Serial.print("."); 
     }
     if(digitalRead(buton)==1)
     {
@@ -259,12 +272,13 @@ void loop()
     }
   }
 
-int mesafe_olc()
+int calculateDistance()
 {
   digitalWrite(trig , HIGH);
   delay(1);
   digitalWrite(trig , LOW);
   sure = pulseIn(echo , HIGH);
-  mesafe = (sure / 2) / 28.5;
-  return mesafe;
+  distance = (sure / 2) / 28.5;
+  return distance;
 }
+  
